@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>MCQ Examinations-{{exam_name}}</title>
+	{% load bootstrap3 %}
+	{% bootstrap_css %}
+	{% bootstrap_javascript %}
+</head>
+<body>
+	{% block bootstrap3_content %}
+		<div class="container-fluid" style="padding:12px;">
+		
+			<div class="row">
+				<div class="col-md-offset-11 col-md-1">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							Time Remaining:
+						</div>
+						<div class="panel-body" id="time_remaining">
+							--:--:--
+						</div>
+					</div>	
+				</div>
+			</div>
+	
+			{% with action_value="/submit_exam/"|add:exam_name|add:"/" %}
+			<form action={{action_value}} method="post" onsubmit="return confirm('Do you really want to submit the answer script?');" id="answers" name="final_answers">
+				<div class="panel-group">
+					{% for question in questions %}
+						{% with forloop.counter|stringformat:"s" as count %}
+						{% with var="Question"|add:count %}
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								{{var}}:{{question.question}}
+							</div>
+							<div class="panel-body">
+								<div class="radio">
+			  						<label><input type="radio" name={{var}} value="a">{{question.option_a}}</label>
+								</div>
+								<div class="radio">
+			  						<label><input type="radio" name={{var}} value="b">{{question.option_b}}</label>
+								</div>
+								<div class="radio">
+			  						<label><input type="radio" name={{var}} value="c">{{question.option_c}}</label>
+								</div>
+								<div class="radio">
+			  						<label><input type="radio" name={{var}} value="d">{{question.option_d}}</label>
+								</div>
+							</div>
+						</div>
+						{% endwith %}
+						{% endwith %}
+					{% endfor %}
+				</div>
+					<button type="submit" class="btn btn-default">Submit</button>
+					{% csrf_token %}
+			</form>		
+			{% endwith %}
+		</div>
+	{% endblock %}
+	<script type="text/javascript">
+		function zeroPad(num, places) {
+  			var zero = places - num.toString().length + 1;
+  			return Array(+(zero > 0 && zero)).join("0") + num;
+		}
+
+		setInterval(function(){
+			var d=new Date();
+			var current_time=new Date().getTime();
+			end_time={{end_time}}*1000;
+			time=document.getElementById("time_remaining");
+			var seconds = (end_time-current_time) / 1000;
+    		var hours = parseInt( seconds / 3600 );
+ 		   	seconds = seconds % 3600;
+    		var minutes = parseInt( seconds / 60 );
+    		seconds = seconds % 60;
+    		seconds=parseInt(seconds);
+			time.innerHTML=zeroPad(hours,2)+":"+zeroPad(minutes,2)+":"+zeroPad(seconds,2);
+		},1000)
+
+
+		var d=new Date();
+		var current_time=new Date().getTime();
+		end_time={{end_time}}*1000;
+		var ms =end_time-current_time;
+
+		setTimeout(function(){
+			form=document.getElementById("answers");
+			answers.setAttribute("onsubmit","");
+				document.forms["final_answers"].submit();
+		},ms)
+	</script>
+</body>
+</html>
