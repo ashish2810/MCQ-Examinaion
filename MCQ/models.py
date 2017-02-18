@@ -11,10 +11,14 @@ class Credentials(mods.User):
 
 class User(models.Model):
 	name=models.CharField(max_length=40,null=True)
-	credentials=models.ForeignKey(Credentials,null=True)
+	credentials=models.OneToOneField(Credentials,null=True)
 	
 	class Meta:
 		abstract=True
+	def __str__(self):
+		return self.name
+	def __unicode__(self):
+		return self.name
 
 
 class Faculty(User):
@@ -23,11 +27,16 @@ class Faculty(User):
 	def viewPerformance():
 		pass
 
+
 class Course(models.Model):
 	code=models.CharField(max_length=10,null=True)
-	name=models.CharField(max_length=20,null=True)
+	name=models.CharField(max_length=50,null=True)
 	credits=models.IntegerField(default=0)
 	faculty=models.ForeignKey(Faculty,null=True)
+	def __str__(self):
+		return self.name
+	def __unicode__(self):
+		return self.name
 
 class Student(User):
 	courses=models.ManyToManyField(Course,symmetrical=True)
@@ -47,8 +56,9 @@ class AnswerKey(models.Model):
 	answers=models.CharField(default="",max_length=100)
 
 class Exam(models.Model):
+	course=models.ForeignKey(Course,null=True)
 	exam_name=models.CharField(default="exam",max_length=100)
-	question_paper=models.ForeignKey(QuestionPaper,null=True)
+	question_paper=models.OneToOneField(QuestionPaper,null=True)
 	answer_key=models.ForeignKey(AnswerKey,null=True)
 	exam_time=models.DateTimeField(null=True)
 	exam_duration=models.IntegerField(default=60)#in minutes

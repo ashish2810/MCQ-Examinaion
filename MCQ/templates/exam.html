@@ -6,12 +6,13 @@
 	{% bootstrap_css %}
 	{% bootstrap_javascript %}
 </head>
-<body>
+<body style="background: #4DB6AC;">
 	{% block bootstrap3_content %}
-		<div class="container-fluid" style="padding:12px;">
+		<div class="container-fluid" style="padding:"0px 12px 0px 12px";">
 		
-			<div class="row">
-				<div class="col-md-offset-11 col-md-1">
+			<div style="position: fixed;width:100%;z-index: 9999;background:#4DB6AC;" id="time_box">
+				<div class="row">
+				<div class="col-md-offset-11 col-md-1"	>
 					<div class="panel panel-primary">
 						<div class="panel-heading">
 							Time Remaining:
@@ -22,43 +23,63 @@
 					</div>	
 				</div>
 			</div>
+			</div>
+			
+				<div id="main_body">
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+							Exam Details
+					</div>
+					<div class="panel-body">
+						<h4>Exam Name:{{exam_name}}</h4>
+						<h4>Cousre Name:{{course.name}}</h4>
+						<h4>Course Code:{{course.code}}</h4>
+						<h4>No of Questions:{{no_of_questions}}</h4>
+					</div>
+				</div>	
+
+				{% with action_value="/submit_exam/"|add:exam_name|add:"/" %}
+				<form action={{action_value}} method="post" onsubmit="return confirm('Do you really want to submit the answer script?');" id="answers" name="final_answers">
+					<div class="panel-group">
+						{% for question in questions %}
+							{% with forloop.counter|stringformat:"s" as count %}
+							{% with var="Question"|add:count %}
+							<div class="panel panel-primary">
+								<div class="panel-heading">
+									{{var}}:{{question.question}}
+								</div>
+								<div class="panel-body">
+									<div class="radio">
+				  						<label><input type="radio" name={{var}} value="a">{{question.option_a}}</label>
+									</div>
+									<div class="radio">
+				  						<label><input type="radio" name={{var}} value="b">{{question.option_b}}</label>
+									</div>
+									<div class="radio">
+				  						<label><input type="radio" name={{var}} value="c">{{question.option_c}}</label>
+									</div>
+									<div class="radio">
+				  						<label><input type="radio" name={{var}} value="d">{{question.option_d}}</label>
+									</div>
+								</div>
+							</div>
+							{% endwith %}
+							{% endwith %}
+						{% endfor %}
+					</div>
+						<button type="submit" class="btn btn-default">Submit</button>
+						{% csrf_token %}
+				</form>		
+				{% endwith %}
+			</div>	
+			</div>
 	
-			{% with action_value="/submit_exam/"|add:exam_name|add:"/" %}
-			<form action={{action_value}} method="post" onsubmit="return confirm('Do you really want to submit the answer script?');" id="answers" name="final_answers">
-				<div class="panel-group">
-					{% for question in questions %}
-						{% with forloop.counter|stringformat:"s" as count %}
-						{% with var="Question"|add:count %}
-						<div class="panel panel-primary">
-							<div class="panel-heading">
-								{{var}}:{{question.question}}
-							</div>
-							<div class="panel-body">
-								<div class="radio">
-			  						<label><input type="radio" name={{var}} value="a">{{question.option_a}}</label>
-								</div>
-								<div class="radio">
-			  						<label><input type="radio" name={{var}} value="b">{{question.option_b}}</label>
-								</div>
-								<div class="radio">
-			  						<label><input type="radio" name={{var}} value="c">{{question.option_c}}</label>
-								</div>
-								<div class="radio">
-			  						<label><input type="radio" name={{var}} value="d">{{question.option_d}}</label>
-								</div>
-							</div>
-						</div>
-						{% endwith %}
-						{% endwith %}
-					{% endfor %}
-				</div>
-					<button type="submit" class="btn btn-default">Submit</button>
-					{% csrf_token %}
-			</form>		
-			{% endwith %}
-		</div>
 	{% endblock %}
 	<script type="text/javascript">
+		var h = document.getElementById('time_box').offsetHeight;
+		var the_body = document.getElementById('main_body');
+		the_body.style.marginTop = h+"px";
+
 		function zeroPad(num, places) {
   			var zero = places - num.toString().length + 1;
   			return Array(+(zero > 0 && zero)).join("0") + num;

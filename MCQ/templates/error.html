@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>
+		MCQ Examinations-error
+	</title>
+	{% load bootstrap3 %}
+	{% bootstrap_css %}
+	{% bootstrap_javascript %}
+</head>
+<body style="background: #4DB6AC;">
+	{% block bootstrap3_content %}	
+		{% include "logo.html" %}
+		{% include "nav.html" %}
+		<div style="position: fixed; top: 50%;height: 60px;margin-top: -30px;width: 100%;">
+			<h2 align="center">{{error}}</h2>
+			<h3 align="center" id="time_box">Redirecting in 3 seconds.</h3>
+			<script type="text/javascript">
+			time=3;
+			setInterval(function(){
+				time=time-1;
+				time_box.innerHTML="Redirecting in "+time+" seconds.";
+			},1000)
+			
+			setTimeout(function(){
+				window.location = "/my_page/";
+			},3000)
+			</script>	
+		</div>
+	{% endblock %}
+</body>
+</html>
