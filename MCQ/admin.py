@@ -5,4 +5,6 @@ admin.site.register(Credentials)
 admin.site.register(Student)
 admin.site.register(Faculty)
 admin.site.register(Course)
+admin.site.unregister(User)
+admin.site.unregister(Group)
 
