@@ -22,6 +22,6 @@ urlpatterns = [
     url(r'^$',log_in,name='log_in'),
     url(r'^my_page/$',my_page,name='my_page'),
     url(r'^log_out/$',log_out,name='log_out'),
-    url(r'^exam/(\D+)/$',give_exam,name='give_exam'),
-    url(r'^submit_exam/(\D+)/$',submit_exam,name='submit_exam'),
+    url(r'^exam/(\w+)/$',give_exam,name='give_exam'),
+    url(r'^submit_exam/(\w+)/$',submit_exam,name='submit_exam'),
 ]
